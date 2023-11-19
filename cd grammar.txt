@@ -1,0 +1,38 @@
+RD Parser for HTML
+
+Team:
+Taksh Kothari - 210905338
+Harshit Hansraj - 210905164
+Laxya Pahuja - 210905166
+Viswatara Kalamsetty - 210905170
+
+Grammar:
+
+document -> html_element
+
+html_element -> open_tag A
+
+A -> content close_tag
+             | close_tag
+
+open_tag -> '<' tag_name attribute_list '>'
+
+close_tag -> '</' tag_name '>'
+
+tag_name -> ID
+
+attribute_list -> attribute attribute_list | ε
+
+attribute -> ID '=' STRING
+
+content -> text content_prime
+
+content_prime -> html_element content_prime
+              | text content_prime
+              | ε
+
+text -> TEXT
+
+ID -> [a-zA-Z][a-zA-Z0-9]*
+STRING -> "([^"])*"
+TEXT -> .+
