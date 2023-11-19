@@ -21,14 +21,16 @@ close_tag -> '</' tag_name '>'
 
 tag_name -> ID
 
-attribute_list -> attribute attribute_list | ε
+attribute_list -> attribute attribute_list 
+                | ε
 
 attribute -> ID '=' STRING
 
 content -> text content_prime
+         | html_element content_prime
+         | ε
 
-content_prime -> html_element content_prime
-              | text content_prime
+content_prime -> content
               | ε
 
 text -> TEXT

@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+int yylex();
+int yyerror(char* msg);
 %}
 
 %union {
@@ -31,14 +33,16 @@ attribute_list: attribute EQ text attribute_list
 
 attribute: ID '=' STRING;
 
-content: text content_prime;
+content: html_element content_prime
+       | text content_prime
+       |
+       ;
 
-content_prime: html_element content_prime
-             | text content_prime
-             |
-             ;
+content_prime: content
+            |
+            ;
 
-text: TEXT { free($$); };
+text: TEXT;
 
 %%
 
