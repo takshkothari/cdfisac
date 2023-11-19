@@ -1,9 +1,6 @@
 %{
-#include <stdio.h>
 #include "parse.tab.h"
 %}
-
-%option noyywrap
 
 %%
 "<!DOCTYPE html>"    { return DOCTYPE; }
@@ -19,11 +16,16 @@
 ">"                  { return CB; }
 "<"([a-zA-Z][a-zA-Z0-9_]*)">"   { return OPEN_TAG; }
 "</"([a-zA-Z][a-zA-Z0-9_]*)">"  { return CLOSE_TAG; }
-[a-zA-Z][a-zA-Z0-9_]*   { return TEXT; }
+[ \t\n]              ; // ignore whitespaces
+[a-zA-Z][a-zA-Z0-9_ .]*   { return TEXT; }
 [0-9]+               { return DIGIT; }
 "="                  { return EQUAL; }
 \"[^\"]         { return QUOTED_STRING; }
 [^ \t\n]+            { return UNQUOTED_STRING; }
-[ \t\n]              ; // ignore whitespaces
+
 
 %%
+
+int yywrap() {
+    return 1;
+}

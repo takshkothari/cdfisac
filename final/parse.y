@@ -24,9 +24,11 @@ head: HEAD_OPEN title meta HEAD_CLOSE { printf("Head recognized!\n"); }
         ;
 
 title: TITLE_OPEN TEXT TITLE_CLOSE { printf("Title recognized!\n"); }
+        | TITLE_OPEN TITLE_CLOSE
         ;
 
 meta: META attributes CB { printf("Meta recognized!\n"); }
+        |
         ;
 
 body: BODY_OPEN content BODY_CLOSED { printf("Body recognized!\n"); }
@@ -37,7 +39,7 @@ content: element content { printf("Element content recognized!\n"); }
         | /* ε */ { printf("Empty content recognized!\n"); }
         ;
 
-element: open_tag content close_tag { printf("Element recognized!\n"); }
+element: open_tag content close_tag { printf("Element recognized: %s\n", yylex); }
         ;
 
 open_tag: OPEN_TAG { printf("Open tag recognized!\n"); }
