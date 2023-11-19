@@ -6,23 +6,24 @@ int yyerror(char* msg);
 extern FILE* yyin;
 %}
 
-%token DOCTYPE HTML_BODY HEAD TITLE META BODY OPEN_TAG CLOSE_TAG TEXT
-%token ELEMENT ATTRIBUTES ATTRIBUTE TAG_NAME ATTR_NAME ATTR_VALUE
-%token QUOTED_STRING UNQUOTED_STRING EQUAL
+%token DOCTYPE HTML_BODY_OPEN HTML_BODY_CLOSE
+%token HEAD_OPEN HEAD_CLOSE TITLE_OPEN TITLE_CLOSE META
+%token BODY_OPEN BODY_CLOSED OPEN_TAG CLOSE_TAG TEXT
+%token DIGIT EQUAL QUOTED_STRING UNQUOTED_STRING EQUAL
 
 %%
 
 html_doc: DOCTYPE html_body { printf("HTML Document recognized!\n"); }
         ;
 
-html_body: HTML_BODY_OPEN HEAD body HTML_BODY_CLOSE { printf("HTML Body recognized!\n"); }
+html_body: HTML_BODY_OPEN head body HTML_BODY_CLOSE { printf("HTML Body recognized!\n"); }
         ;
 
-HEAD: HEAD_OPEN TITLE meta HEAD_CLOSE { printf("Head recognized!\n"); }
+head: HEAD_OPEN title meta HEAD_CLOSE { printf("Head recognized!\n"); }
         | /* ε */ { printf("Empty Head recognized!\n"); }
         ;
 
-TITLE: TITLE_OPEN TEXT TITLE_CLOSE { printf("Title recognized!\n"); }
+title: TITLE_OPEN TEXT TITLE_CLOSE { printf("Title recognized!\n"); }
         ;
 
 meta: META attributes CLOSE_TAG { printf("Meta recognized!\n"); }
@@ -36,49 +37,32 @@ content: element content { printf("Element content recognized!\n"); }
         | /* ε */ { printf("Empty content recognized!\n"); }
         ;
 
-element: OPEN_TAG content CLOSE_TAG { printf("Element recognized!\n"); }
+element: open_tag content close_tag { printf("Element recognized!\n"); }
         ;
 
-open_tag: OPEN_TAG TAG_NAME attributes '>' { printf("Open tag recognized!\n"); }
+open_tag: OPEN_TAG { printf("Open tag recognized!\n"); }
         ;
 
-close_tag: CLOSE_TAG TAG_NAME '>' { printf("Close tag recognized!\n"); }
+close_tag: CLOSE_TAG { printf("Close tag recognized!\n"); }
         ;
 
-TAG_NAME: LETTER (LETTER | DIGIT | '_')* { printf("Tag name: %s\n", yytext); }
+tag_name: LETTER (LETTER | DIGIT | '_')* { printf("Tag name: %s\n", yytext); }
         ;
 
 attributes: attribute attributes { printf("Attributes recognized!\n"); }
         | /* ε */ { printf("Empty attributes recognized!\n"); }
         ;
 
-attribute: ATTR_NAME EQUAL ATTR_VALUE { printf("Attribute recognized!\n"); }
+attribute: attr_name EQUAL attr_value { printf("Attribute recognized!\n"); }
         ;
 
-ATTR_NAME: LETTER (LETTER | DIGIT | '_')* { printf("Attribute name: %s\n", yytext); }
+attr_name: LETTER (LETTER | DIGIT | '_')* { printf("Attribute name: %s\n", yytext); }
         ;
 
-ATTR_VALUE: QUOTED_STRING { printf("Quoted attribute value: %s\n", yytext); }
+attr_value: QUOTED_STRING { printf("Quoted attribute value: %s\n", yytext); }
           | UNQUOTED_STRING { printf("Unquoted attribute value: %s\n", yytext); }
         ;
 
-QUOTED_STRING: '\'' TEXT '\'' { printf("Quoted string: %s\n", yytext); }
-        ;
-
-UNQUOTED_STRING: TEXT { printf("Unquoted string: %s\n", yytext); }
-        ;
-
-TEXT: (LETTER | DIGIT)* { printf("Text: %s\n", yytext); }
-        ;
-
-LETTER: [a-zA-Z] { printf("Letter: %s\n", yytext); }
-        ;
-
-DIGIT: [0-9] { printf("Digit: %s\n", yytext); }
-        ;
-
-EQUAL: '=' { printf("Equal sign recognized!\n"); }
-        ;
 
 %%
 

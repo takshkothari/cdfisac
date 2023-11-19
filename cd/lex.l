@@ -5,15 +5,15 @@
 
 %%
 "<!DOCTYPE html>"    { return DOCTYPE; }
-"<html>"             { return HTML_BODY; }
-"</html>"            { return HTML_BODY; }
-"<head>"             { return HEAD; }
-"</head>"            { return HEAD; }
-"<title>"            { return TITLE; }
-"</title>"           { return TITLE; }
-"<body>"             { return BODY; }
-"</body>"            { return BODY; }
-"<meta"              { return META; }
+"<html>"             { return HTML_BODY_OPEN; }
+"</html>"            { return HTML_BODY_CLOSE; }
+"<head>"             { return HEAD_OPEN; }
+"</head>"            { return HEAD_CLOSE; }
+"<title>"            { return TITLE_OPEN; }
+"</title>"           { return TITLE_CLOSE; }
+"<body>"             { return BODY_OPEN; }
+"</body>"            { return BODY_CLOSED; }
+"<meta>"              { return META; }
 "<"([a-zA-Z][a-zA-Z0-9_]*)">"   { return OPEN_TAG; }
 "</"([a-zA-Z][a-zA-Z0-9_]*)">"  { return CLOSE_TAG; }
 [a-zA-Z][a-zA-Z0-9_]*   { return TEXT; }
@@ -24,12 +24,3 @@
 [ \t\n]              ; // ignore whitespaces
 
 %%
-
-int yywrap() {
-    return 1;
-}
-
-int main() {
-    yylex();
-    return 0;
-}
